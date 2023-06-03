@@ -1,0 +1,127 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <groupId>org.jogamp.java3d</groupId>
+  <artifactId>java3d-jogamp-and</artifactId>
+  <version>1.7.1</version>
+  <description>Collection of minor bug fixes, alteration and native libraries</description>
+  
+    <licenses>
+		<license>
+			<name>GPLv2 with Classpath exception</name>
+			<url>http://www.gnu.org/licenses/gpl-2.0.txt</url>
+			<distribution>repo</distribution>
+		</license>
+	</licenses>
+
+	<developers>
+		<developer>
+			<id>philjord</id>
+			<name>Philip Jordan</name>
+			<email>p.j.nz@outlook.com</email>
+			<url>https://github.com/philjord</url>
+			<organization>JogAmp</organization>
+			<organizationUrl>http://jogamp.org/</organizationUrl>
+			<roles>
+				<role>maintainer</role>
+			</roles>
+			<timezone>+12</timezone>
+		</developer>		
+	</developers>
+	
+	<scm>
+		<connection>scm:git:https://github.com/philjord/java3d-jogamp-and</connection>
+		<developerConnection></developerConnection>
+		<tag>HEAD</tag>
+		<url>https://github.com/philjord/java3d-jogamp-and</url>
+	</scm>
+    
+  
+  	<properties>
+		<jogamp.version>2.4.0</jogamp.version>
+
+		<!-- NB: Avoid platform encoding warning when copying resources. -->
+		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+				
+	</properties>
+	<repositories>
+          <repository>
+            <id>jogamp-remote</id>
+            <name>jogamp test mirror</name>
+            <url>https://www.jogamp.org/deployment/maven/</url>
+            <layout>default</layout>
+          </repository>
+          <repository>
+            <id>jogamp-java3d-remote</id>
+            <name>jogamp java3d test mirror</name>
+            <url>https://www.jogamp.org/deployment/maven-java3d/</url>
+            <layout>default</layout>
+          </repository>
+    </repositories>
+	<dependencies>		
+		<dependency>
+			<groupId>org.jogamp.gluegen</groupId>
+			<artifactId>gluegen-rt-android</artifactId>
+			<version>${jogamp.version}</version>
+			<optional>true</optional> <!-- otherwise dependent project will pull this in, but we actually merge it into the output -->			
+		</dependency>
+		<dependency>
+			<groupId>org.jogamp.jogl</groupId>
+			<artifactId>jogl-all-android</artifactId>
+			<version>${jogamp.version}</version>
+			<optional>true</optional> <!-- otherwise dependent project will pull this in, but we actually merge it into the output -->			
+		</dependency>
+	</dependencies>
+	
+  <build>
+    <defaultGoal>install</defaultGoal>
+
+	<sourceDirectory>${basedir}/src</sourceDirectory>
+	
+    <resources>
+      <resource>
+        <directory>${project.basedir}/src</directory>           	
+        <excludes>
+          <exclude>**/*.java</exclude>
+          <exclude>**/package.html</exclude>
+        </excludes>
+      </resource>
+      <resource>
+      	<directory>${project.basedir}/lib</directory>  
+      </resource>      
+    </resources>
+    <plugins>
+      <plugin>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.0</version>
+        <configuration>
+          <source>1.6</source>
+          <target>1.6</target>
+        </configuration>        
+      </plugin>      
+      <!-- This project overrides a few of the classes in it's parent, but must publish the merged jar as an artifact -->
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-shade-plugin</artifactId>
+        <version>3.2.1</version>
+        <executions>
+          <execution>
+            <goals>
+              <goal>shade</goal>
+            </goals>         
+            <configuration>	        	                          
+		        <artifactSet>
+	                <includes>
+	               		<include>${project.groupId}:java3d-jogamp-and:jar:</include>
+	                    <include>org.jogamp.gluegen:gluegen-rt-android:jar:</include>   
+	                    <include>org.jogamp.jogl:jogl-all-android:jar:</include>   	                       	
+	                </includes>
+	            </artifactSet>   
+	            <createDependencyReducedPom>false</createDependencyReducedPom>                      
+            </configuration>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+</project>
