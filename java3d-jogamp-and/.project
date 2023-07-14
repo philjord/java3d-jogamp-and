@@ -22,6 +22,16 @@
 	</natures>
 	<linkedResources>
 		<link>
+			<name>src-awtgeom</name>
+			<type>2</type>
+			<location>C:/Users/pjnz/git/awtgeom/awtgeom/src</location>
+		</link>
+		<link>
+			<name>src-awtshim</name>
+			<type>2</type>
+			<location>C:/Users/pjnz/git/awtshim/awtshim/src</location>
+		</link>
+		<link>
 			<name>src-awtshim-android</name>
 			<type>2</type>
 			<location>C:/Users/pjnz/git/awtshim-android/awtshim-android/src</location>
