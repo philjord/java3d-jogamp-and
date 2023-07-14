@@ -114,7 +114,7 @@
 	                <includes>
 	               		<include>${project.groupId}:java3d-jogamp-and:jar:</include>
 	                    <include>org.jogamp.gluegen:gluegen-rt-android:jar:</include>   
-	                    <include>org.jogamp.jogl:jogl-all-android:jar:</include>   	                       	
+	                    <include>org.jogamp.jogl:jogl-all-android:jar:</include>                     	
 	                </includes>
 	            </artifactSet>   
 	            <createDependencyReducedPom>false</createDependencyReducedPom>                      
