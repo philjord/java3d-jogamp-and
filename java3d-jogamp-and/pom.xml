@@ -91,14 +91,19 @@
       </resource>      
     </resources>
     <plugins>
-      <plugin>
-        <artifactId>maven-compiler-plugin</artifactId>
+	  <!-- if you get this error then on the run as -> maven build... under JRE change the jdk to a normal one
+	  Invalid layout of java.lang.Thread at name
+	Error occurred during initialization of VM
+	Invalid layout of preloaded class: use -XX:+TraceClassLoading to see the origin of the problem class
+ -->    
+      <plugin>       
+       <artifactId>maven-compiler-plugin</artifactId>
         <version>3.8.0</version>
         <configuration>
-          <source>1.6</source>
-          <target>1.6</target>
+          <source>1.8</source>
+          <target>1.8</target>
         </configuration>        
-      </plugin>      
+      </plugin> 
       <!-- This project overrides a few of the classes in it's parent, but must publish the merged jar as an artifact -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>
