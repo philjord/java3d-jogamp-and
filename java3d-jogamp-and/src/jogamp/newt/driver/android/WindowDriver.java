@@ -721,4 +721,9 @@ public class WindowDriver extends jogamp.newt.WindowImpl implements Callback2 {
     protected static native int getHeight0(long surfaceHandle);
     protected static native void acquire0(long surfaceHandle);
     protected static native void release0(long surfaceHandle);
+
+	@Override
+	public boolean canSetSurfaceScale() {
+		return false;
+	}
 }

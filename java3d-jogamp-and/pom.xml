@@ -2,7 +2,7 @@
   <modelVersion>4.0.0</modelVersion>
   <groupId>org.jogamp.java3d</groupId>
   <artifactId>java3d-jogamp-and</artifactId>
-  <version>1.7.1</version>
+  <version>1.7.2</version>
   <description>Collection of minor bug fixes, alteration and native libraries</description>
   
     <licenses>
@@ -37,7 +37,7 @@
     
   
   	<properties>
-		<jogamp.version>2.4.0</jogamp.version>
+		<jogamp.version>2.5.0</jogamp.version>
 
 		<!-- NB: Avoid platform encoding warning when copying resources. -->
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
