@@ -135,8 +135,8 @@ public class NewtBaseFragment extends Fragment
 		final Window delegateWindow = newtWindow.getDelegatedWindow();
 		Log.d(MD.TAG, "registerNEWTWindow: Type "+newtWindow.getClass().getName()+", delegate "+delegateWindow.getClass().getName());
 		if(delegateWindow instanceof WindowDriver) {
-			final WindowDriver newtAWindow = (WindowDriver)delegateWindow;
-			newtAWindow.registerActivity(getActivity());
+//			final WindowDriver newtAWindow = (WindowDriver)delegateWindow;
+//			newtAWindow.registerActivity(getActivity());
 		} else {
 			throw new IllegalArgumentException("Given NEWT Window's Delegate is not an Android Window: "+delegateWindow.getClass().getName());
 		}
