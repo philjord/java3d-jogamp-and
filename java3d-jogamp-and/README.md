@@ -25,7 +25,7 @@ jogl-all-android-natives-linux-amd64.jar
 
 Notes on compiling, this project compiles against an android hybrid jdk, built out of 1.8.0_66, with the android.jar and a whole bunch of andoirdx jars added called jdk1.8.0_66a
 
-This hybrid jdk is held in a zip file in java3d-core-and
+This hybrid jdk is held in a zip file 
 
 This compile JDK sometimes gets the extra android jar removed by the IDE randomly so needs them re-added under the edit of Installed JRE's
 
