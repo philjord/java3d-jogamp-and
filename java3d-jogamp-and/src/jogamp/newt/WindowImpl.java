@@ -73,6 +73,7 @@ import com.jogamp.common.util.PropertyAccess;
 import com.jogamp.common.util.ReflectionUtil;
 import com.jogamp.common.util.locks.LockFactory;
 import com.jogamp.common.util.locks.RecursiveLock;
+import com.jogamp.math.FloatUtil;
 import com.jogamp.newt.Display;
 import com.jogamp.newt.Display.PointerIcon;
 import com.jogamp.newt.MonitorDevice;
@@ -89,7 +90,6 @@ import com.jogamp.newt.event.MonitorEvent;
 import com.jogamp.newt.event.MonitorModeListener;
 import com.jogamp.newt.event.MouseEvent;
 import com.jogamp.newt.event.MouseEvent.PointerType;
-import com.jogamp.opengl.math.FloatUtil;
 import com.jogamp.newt.event.MouseListener;
 import com.jogamp.newt.event.NEWTEvent;
 import com.jogamp.newt.event.NEWTEventConsumer;
@@ -4943,27 +4943,30 @@ public abstract class WindowImpl implements Window, NEWTEventConsumer
 		}
 	}
 
-	/**
-	 * Triggered by implementation's WM events to update the content
-	 * @param defer if true sent event later, otherwise wait until processed.
-	 * @param x dirty-region y-pos in pixel units
-	 * @param y dirty-region x-pos in pixel units
-	 * @param width dirty-region width in pixel units
-	 * @param height dirty-region height in pixel units
-	 */
-	protected final void windowRepaint(final boolean defer, final int x, final int y, int width, int height) {
-		width = ( 0 >= width ) ? getSurfaceWidth() : width;
-		height = ( 0 >= height ) ? getSurfaceHeight() : height;
-		if(DEBUG_IMPLEMENTATION) {
-			System.err.println("Window.windowRepaint "+getThreadName()+" (defer: "+defer+") "+x+"/"+y+" "+width+"x"+height);
-		}
+    /**
+     * Triggered by implementation's WM events to update the content
+     * @param defer if true sent event later, otherwise wait until processed.
+     * @param x dirty-region y-pos in pixel units
+     * @param y dirty-region x-pos in pixel units
+     * @param width dirty-region width in pixel units
+     * @param height dirty-region height in pixel units
+     */
+    protected final boolean windowRepaint(final boolean defer, final int x, final int y, int width, int height) {
+        width = ( 0 >= width ) ? getSurfaceWidth() : width;
+        height = ( 0 >= height ) ? getSurfaceHeight() : height;
+        if(DEBUG_IMPLEMENTATION) {
+            System.err.println("Window.windowRepaint "+getThreadName()+" (defer: "+defer+") "+x+"/"+y+" "+width+"x"+height);
+        }
 
-		if(isNativeValid()) {
-			final NEWTEvent e = new WindowUpdateEvent(WindowEvent.EVENT_WINDOW_REPAINT, this, System.currentTimeMillis(),
-					new Rectangle(x, y, width, height));
-			doEvent(defer, false, e);
-		}
-	}
+        if(isNativeValid()) {
+            final NEWTEvent e = new WindowUpdateEvent(WindowEvent.EVENT_WINDOW_REPAINT, this, System.currentTimeMillis(),
+                                                      new Rectangle(x, y, width, height));
+            doEvent(defer, false, e);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
 	/**
 	 * Triggered by implementation's WM events or programmatic while respecting {@link #getDefaultCloseOperation()}.
@@ -5310,10 +5313,10 @@ public abstract class WindowImpl implements Window, NEWTEventConsumer
 		}
 	}
 
-	@Override
-	public final void windowRepaint(final int x, final int y, final int width, final int height) {
-		windowRepaint(false, x, y, width, height);
-	}
+    @Override
+    public final boolean windowRepaint(final int x, final int y, final int width, final int height) {
+        return windowRepaint(false, x, y, width, height);
+    }
 
 	//
 	// Accumulated actions
