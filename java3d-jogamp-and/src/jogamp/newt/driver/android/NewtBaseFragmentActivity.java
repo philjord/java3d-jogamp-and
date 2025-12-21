@@ -1,16 +1,16 @@
 /**
  * Copyright 2011 JogAmp Community. All rights reserved.
- * <p>
+ *
  * Redistribution and use in source and binary forms, with or without modification, are
  * permitted provided that the following conditions are met:
- * <p>
+ *
  * 1. Redistributions of source code must retain the above copyright notice, this list of
  * conditions and the following disclaimer.
- * <p>
+ *
  * 2. Redistributions in binary form must reproduce the above copyright notice, this list
  * of conditions and the following disclaimer in the documentation and/or other materials
  * provided with the distribution.
- * <p>
+ *
  * THIS SOFTWARE IS PROVIDED BY JogAmp Community ``AS IS'' AND ANY EXPRESS OR IMPLIED
  * WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
  * FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL JogAmp Community OR
@@ -20,12 +20,26 @@
  * ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
  * NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
  * ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
- * <p>
+ *
  * The views and conclusions contained in the software and documentation are those of the
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of JogAmp Community.
  */
 package jogamp.newt.driver.android;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import com.jogamp.nativewindow.CapabilitiesImmutable;
+import com.jogamp.opengl.FPSCounter;
+import com.jogamp.opengl.GLAnimatorControl;
+import com.jogamp.opengl.GLAutoDrawable;
+
+import com.jogamp.newt.Window;
+import com.jogamp.opengl.GLEventListenerState;
+import com.jogamp.opengl.GLStateKeeper;
+
+//import jogamp.newt.driver.android.WindowDriver;
 
 import android.app.Activity;
 import android.content.Context;
@@ -35,18 +49,7 @@ import android.view.WindowManager;
 
 import androidx.fragment.app.FragmentActivity;
 
-import com.jogamp.nativewindow.CapabilitiesImmutable;
-import com.jogamp.newt.Window;
-import com.jogamp.opengl.FPSCounter;
-import com.jogamp.opengl.GLAnimatorControl;
-import com.jogamp.opengl.GLAutoDrawable;
-import com.jogamp.opengl.GLEventListenerState;
-import com.jogamp.opengl.GLStateKeeper;
-
-import java.util.ArrayList;
-import java.util.List;
-
-//PJPJ Fragment Activity is slightly more useful in Android coding, its a subclass of Activity
+//PJPJ FragmentActivity is slightly more useful in Android coding, its a subclass of Activity
 //https://stackoverflow.com/questions/10477997/difference-between-activity-and-fragmentactivity
 
 public class NewtBaseFragmentActivity extends FragmentActivity {//PJ

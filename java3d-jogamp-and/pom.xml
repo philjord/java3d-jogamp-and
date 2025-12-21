@@ -86,9 +86,6 @@
           <exclude>**/package.html</exclude>
         </excludes>
       </resource>
-      <resource>
-      	<directory>${project.basedir}/lib</directory>  
-      </resource>      
     </resources>
     <plugins>
 	  <!-- if you get this error then on the run as -> maven build... under JRE change the jdk to a normal one
@@ -104,6 +101,19 @@
           <target>1.8</target>
         </configuration>        
       </plugin> 
+      <plugin>
+			<groupId>org.apache.maven.plugins</groupId>
+			<artifactId>maven-source-plugin</artifactId>
+			<version>3.4.0</version>
+			<executions>
+				<execution>
+					<id>attach-sources</id>
+					<goals>
+						<goal>jar</goal>
+					</goals>
+				</execution>
+			</executions>
+		</plugin>
       <!-- This project overrides a few of the classes in it's parent, but must publish the merged jar as an artifact -->
       <plugin>
         <groupId>org.apache.maven.plugins</groupId>

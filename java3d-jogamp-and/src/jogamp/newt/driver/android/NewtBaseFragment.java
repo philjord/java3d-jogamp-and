@@ -1,4 +1,3 @@
-package jogamp.newt.driver.android;
 /**
  * Copyright 2011 JogAmp Community. All rights reserved.
  *
@@ -26,6 +25,7 @@ package jogamp.newt.driver.android;
  * authors and should not be interpreted as representing official policies, either expressed
  * or implied, of JogAmp Community.
  */
+package jogamp.newt.driver.android;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -47,8 +47,7 @@ import android.view.WindowManager;
 
 import androidx.fragment.app.Fragment;
 
-public class NewtBaseFragment extends Fragment
-{
+public class NewtBaseFragment extends Fragment {
 	List<Window> newtWindows = new ArrayList<Window>();
 	List<GLAutoDrawable> glAutoDrawables = new ArrayList<GLAutoDrawable>();
 
@@ -93,11 +92,16 @@ public class NewtBaseFragment extends Fragment
 	}
 
 	/**
-	 *
+     * This is one of the three registration methods (see below).
+     * <p>
+     * This methods issues {@link android.view.Window#setContentView(android.view.View, android.view.ViewGroup.LayoutParams) androidWindow.setContenView(newtWindow.getAndroidView())}
+     * and finally calls {@link #registerNEWTWindow(Window)}.
+     * </p>
 	 * @param androidWindow
 	 * @param newtWindow
-	 * @return
 	 * @throws IllegalArgumentException if the <code>newtWindow</code>'s {@link Window#getDelegatedWindow() delegate} is not an AndroidDriver.
+     * @see #registerNEWTWindow(Window)
+     * @see #addContentView(android.view.Window, Window, android.view.ViewGroup.LayoutParams)
 	 */
 	public View getContentView(final android.view.Window androidWindow, final Window newtWindow) throws IllegalArgumentException {
 		final Window delegateWindow = newtWindow.getDelegatedWindow();
@@ -123,13 +127,14 @@ public class NewtBaseFragment extends Fragment
 	 * </p>
 	 * <p>
 	 * If adding a {@link GLAutoDrawable} implementation, the {@link GLEventListenerState} will preserve it's state
-	 * when {@link #onPause()} is called. A later {@link #onResume()} will
+     * when {@link #onPause()} is being called while not {@link #isFinishing()}. A later {@link #onResume()} will
 	 * reinstate the {@link GLEventListenerState}.
 	 * </p>
 	 *
 	 * @param newtWindow
 	 * @throws IllegalArgumentException if the <code>newtWindow</code>'s {@link Window#getDelegatedWindow() delegate} is not an AndroidDriver.
-	 * @see #getContentView(android.view.Window, Window)
+     * @see #setContentView(android.view.Window, Window)
+     * @see #addContentView(android.view.Window, Window, android.view.ViewGroup.LayoutParams)
 	 */
 	public void registerNEWTWindow(final Window newtWindow) throws IllegalArgumentException {
 		final Window delegateWindow = newtWindow.getDelegatedWindow();
@@ -207,7 +212,7 @@ public class NewtBaseFragment extends Fragment
 	 * Must be called before creating the view and adding any content, i.e. setContentView() !
 	 * </p>
 	 * <p>
-	 * Is normally issued by {@link #getContentView(android.view.Window, Window)}
+	 * Is normally issued by {@link #setContentView(android.view.Window, Window)}
 	 * if the requested NEWT Capabilities ask for transparency.
 	 * </p>
 	 * <p>
@@ -233,12 +238,13 @@ public class NewtBaseFragment extends Fragment
 	 * Setting up a global {@Link GLAnimatorControl} for {@link #onPause()} and {@link #onResume()}.
 	 * <p>
 	 * Note that if adding a {@link GLAutoDrawable} implementation via {@link #registerNEWTWindow(Window)},
-	 * {@link #getContentView(android.view.Window, Window)}
+     * {@link #setContentView(android.view.Window, Window)} or {@link #addContentView(android.view.Window, Window, android.view.ViewGroup.LayoutParams)}
 	 * their {@link GLAnimatorControl} retrieved by {@link GLAutoDrawable#getAnimator()} will be used as well.
 	 * In this case, using this global {@Link GLAnimatorControl} is redundant.
 	 * </p>
 	 * @see #registerNEWTWindow(Window)
-	 * @see #getContentView(android.view.Window, Window)
+     * @see #setContentView(android.view.Window, Window)
+     * @see #addContentView(android.view.Window, Window, android.view.ViewGroup.LayoutParams)
 	 */
 	public void setAnimator(final GLAnimatorControl animator) {
 		this.animator = animator;
@@ -248,7 +254,7 @@ public class NewtBaseFragment extends Fragment
 		animator.pause();
 	}
 
-
+    //@Override PJ not an override
 	public android.view.Window getWindow() {
 
 		return getActivity().getWindow();

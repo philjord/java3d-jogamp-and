@@ -73,8 +73,9 @@ import android.view.inputmethod.InputMethodManager;
 import android.view.SurfaceView;
 import android.view.KeyEvent;
 
-//PJPJ exact copy from 2.4.0 except...
+//PJPJ exact copy from 2.6.0 except...
 // modified to gate the ExceptionUtils.dumpStack(System.err); in {@link #surfaceDestroyed} to DEBUG only because it's very common and looks like an error
+// Also the ability to hold a pointer to the activity is a memory leak, removed
 public class WindowDriver extends jogamp.newt.WindowImpl implements Callback2 {
     static {
         DisplayDriver.initSingleton();
@@ -212,10 +213,11 @@ public class WindowDriver extends jogamp.newt.WindowImpl implements Callback2 {
         reset();
     }
 
-    // was to allow NEWT to use esc to system exit, but it's a leak and not a good idea
-    /*public void registerActivity(final Activity activity) {
+    // PJ was to allow NEWT to use esc to system exit, but it's a leak and not a good idea
+    public void registerActivity(final Activity activity) {
+    	//PJ ignored
         //this.activity = activity;
-    }*/
+    }
    //protected Activity activity = null;
 
     private final void reset() {
@@ -241,12 +243,10 @@ public class WindowDriver extends jogamp.newt.WindowImpl implements Callback2 {
         androidView.setOnTouchListener(eventTranslator);
         androidView.setOnKeyListener(eventTranslator);
         androidView.setOnFocusChangeListener(eventTranslator);
-        if(AndroidVersion.SDK_INT >= 12) { // API Level 12
-            Log.d(MD.TAG, "setupInputListener - enable GenericMotionListener - "+Thread.currentThread().getName());
             androidView.setOnGenericMotionListener(eventTranslator);
-        }
         if( enable ) {
             androidView.post(new Runnable() {
+                @Override
                 public void run() {
                     androidView.setClickable(false);
                     androidView.setFocusable(true);
@@ -302,6 +302,7 @@ public class WindowDriver extends jogamp.newt.WindowImpl implements Callback2 {
             if( null != viewGroup && !added2StaticViewGroup ) {
                 added2StaticViewGroup = true;
                 viewGroup.post(new Runnable() {
+                    @Override
                     public void run() {
                         if(null == androidView) {
                             setupAndroidView( StaticContext.getContext() );
@@ -326,7 +327,7 @@ public class WindowDriver extends jogamp.newt.WindowImpl implements Callback2 {
     }
 
     @Override
-    protected final void createNativeImpl(boolean[] positionModified) {
+    protected final void createNativeImpl(final boolean[] positionModified) {
         // Create own screen/device resource instance allowing independent ownership,
         // while still utilizing shared EGL resources.
         final AbstractGraphicsScreen aScreen = getScreen().getGraphicsScreen();
@@ -414,6 +415,7 @@ public class WindowDriver extends jogamp.newt.WindowImpl implements Callback2 {
                 final ViewGroup viewGroup = StaticContext.getContentViewGroup();
                 if( null != viewGroup) {
                     viewGroup.post(new Runnable() {
+                        @Override
                         public void run() {
                             viewGroup.removeView(androidView);
                             Log.d(MD.TAG, "closeNativeImpl: removed from static ViewGroup - on thread "+Thread.currentThread().getName());
@@ -439,8 +441,8 @@ public class WindowDriver extends jogamp.newt.WindowImpl implements Callback2 {
      * {@inheritDoc}
      */
     @Override
-    public final void focusChanged(final boolean defer, final boolean focusGained) {
-        super.focusChanged(defer, focusGained);
+    public final boolean focusChanged(final boolean defer, final boolean focusGained) {
+        return super.focusChanged(defer, focusGained);
     }
 
     @Override
@@ -448,6 +450,7 @@ public class WindowDriver extends jogamp.newt.WindowImpl implements Callback2 {
         if(null != androidView) {
             Log.d(MD.TAG, "requestFocusImpl: reparented "+reparented);
             androidView.post(new Runnable() {
+                @Override
                 public void run() {
                     androidView.requestFocus();
                     androidView.bringToFront();
@@ -613,7 +616,7 @@ public class WindowDriver extends jogamp.newt.WindowImpl implements Callback2 {
         Log.d(MD.TAG, "surfaceDestroyed - on thread "+Thread.currentThread().getName());
         windowDestroyNotify(true); // actually too late .. however ..
         //PJ debug case only
-        if(Window.DEBUG_IMPLEMENTATION){
+        if(Window.DEBUG_IMPLEMENTATION) {
             ExceptionUtils.dumpStack(System.err);
         }
     }
@@ -638,7 +641,7 @@ public class WindowDriver extends jogamp.newt.WindowImpl implements Callback2 {
                 // event processed, just send invisible event, no activity.finished()
                 enqueueAKey2NKeyUpDown(event, com.jogamp.newt.event.KeyEvent.VK_KEYBOARD_INVISIBLE);
                 return true;
-            } /*else if( null != activity ) {
+            } /*else if( null != activity ) { //PJ activity pointer removed
                 // process event on our own, since we have an activity to call finish()
                 // and decide in overriden consumeKeyEvent(..) whether we suppress or proceed w/ activity.finish().
                 enqueueAKey2NKeyUpDown(event, com.jogamp.newt.event.KeyEvent.VK_ESCAPE);
@@ -662,7 +665,7 @@ public class WindowDriver extends jogamp.newt.WindowImpl implements Callback2 {
     protected void consumeKeyEvent(final com.jogamp.newt.event.KeyEvent e) {
         super.consumeKeyEvent(e); // consume event, i.e. call all KeyListener
         
-        // key presses are a bad way to operate android devices
+        // PJ key presses are a bad way to operate android devices
        /* if( com.jogamp.newt.event.KeyEvent.EVENT_KEY_RELEASED == e.getEventType() && !e.isConsumed() ) {
             if( com.jogamp.newt.event.KeyEvent.VK_ESCAPE == e.getKeyCode() ) {
                 Log.d(MD.TAG, "handleKeyCodeBack.X2 : "+e);
@@ -673,6 +676,7 @@ public class WindowDriver extends jogamp.newt.WindowImpl implements Callback2 {
             }
         }*/
     }
+    //PJ
     /*private void triggerHome() {
         final Context ctx = StaticContext.getContext();
         if(null == ctx) {
@@ -695,7 +699,7 @@ public class WindowDriver extends jogamp.newt.WindowImpl implements Callback2 {
     class MSurfaceView extends SurfaceView {
         public MSurfaceView (final Context ctx) {
             super(ctx);
-            setBackgroundDrawable(null);
+            setBackground(null);
             // setBackgroundColor(Color.TRANSPARENT);
         }
 
@@ -724,9 +728,4 @@ public class WindowDriver extends jogamp.newt.WindowImpl implements Callback2 {
     protected static native int getHeight0(long surfaceHandle);
     protected static native void acquire0(long surfaceHandle);
     protected static native void release0(long surfaceHandle);
-
-	@Override
-	public boolean canSetSurfaceScale() {
-		return false;
-	}
 }

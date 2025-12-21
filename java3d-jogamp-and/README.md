@@ -30,3 +30,17 @@ This hybrid jdk is held in a zip file
 This compile JDK sometimes gets the extra android jar removed by the IDE randomly so needs them re-added under the edit of Installed JRE's
 
 Also this compile JDK can't be used to run any maven builds or install, so you must run as... Maven build... and set the JRE tab to use JDK 11 not the project default
+
+On the same note, your maven run as MUST have a JAVA_HOME variable set in the "Environment" tab of the latest jdk if you want javadocs to build
+
+Note on how to upgrade jogl version, recompare the source with these overrides and update. Also get the new android libs from here, and all the other similar sub parts
+
+https://repo1.maven.org/maven2/org/jogamp/jogl/jogl-all-mobile/x.x.x/
+
+https://repo1.maven.org/maven2/org/jogamp/gluegen/gluegen-rt-android/2.6.0/
+
+https://repo1.maven.org/maven2/org/jogamp/joal/joal-android/2.6.0/
+
+into
+
+C:\Users\pjnz\git\java3d-jogamp-and\java3d-jogamp-and\libs\lib\arm64-v8a
