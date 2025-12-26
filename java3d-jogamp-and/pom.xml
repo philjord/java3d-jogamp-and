@@ -3,7 +3,7 @@
   <groupId>org.jogamp.java3d</groupId>
   <artifactId>java3d-jogamp-and</artifactId>
   <version>1.7.2</version>
-  <description>Collection of minor bug fixes, alteration and native libraries</description>
+  <description>Collection of minor bug fixes, alterations and native libraries</description>
   
     <licenses>
 		<license>
@@ -44,20 +44,6 @@
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 				
 	</properties>
-	<repositories>
-          <repository>
-            <id>jogamp-remote</id>
-            <name>jogamp test mirror</name>
-            <url>https://www.jogamp.org/deployment/maven/</url>
-            <layout>default</layout>
-          </repository>
-          <repository>
-            <id>jogamp-java3d-remote</id>
-            <name>jogamp java3d test mirror</name>
-            <url>https://www.jogamp.org/deployment/maven-java3d/</url>
-            <layout>default</layout>
-          </repository>
-    </repositories>
 	<dependencies>		
 		<dependency>
 			<groupId>org.jogamp.gluegen</groupId>
